@@ -1,239 +1,143 @@
 ---
-title: API Reference
+title: Smart Reference Data REST API
 
-language_tabs: # must be one of https://git.io/vQNgJ
+<!-- language_tabs: # must be one of https://git.io/vQNgJ
   - shell
   - ruby
   - python
-  - javascript
+  - javascript --> 
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
 
 includes:
+  
   - errors
+ 
 
 search: true
 ---
 
-# Introduction
+# Overivew
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+The *Smart Reference Data REST API* provides you with a convenient, and simple web services interface for interacting with Smart Reference Data database server. The REST APIs are designed to easily access Smart Reference Data database and perform key tasks, that include, insert, update, and retrieve operation.
 
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+The Intergraph Smart® Reference Data REST API Help explains the basics of using the REST APIs to access Smart Reference Data database server.
 
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
+You will be able to perform insert, update, and retrieve operations on the following business objects:
 
-# Authentication
+* Projects
+* Disciplines
+* Nls
+* Attributes
+* Tables
+* Geometrics
+* Table Groups
+* Table Details
+* Commodity Rules
+* Commodity Group
+* Commodity Parts
+* Commodity Codes
+* Idents
+* Company Idents
+* Schedule Jobs
 
-> To authorize, use this code:
+You will be able to perform retrieve operation on the following business objects:
 
-```ruby
-require 'kittn'
+* Specification Types
+* Specification Headers
+* Specification Header Details
+* Specification Header Geometrics
+   * Specification Header Notes
+   * Specification Items
+   * Specification Item Notes
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
 
-```python
-import kittn
+# Authorization Architecture
 
-api = kittn.authorize('meowmeowmeow')
-```
+A common OAuth allows a third-party client, such as PostMan web API, termed the client in the OAuth 2.0 specification, to operate on behalf of a user, without revealing that user’s credentials, such as user name and password, to the client. The client first sends the user credentials to an authorization server (Intergraph's Cloud9 service), which authenticates the user, obtains the user’s authorization, and issues an access token which the client can use in interacting with a resource server (Smart Reference Data database server)
+![OAuth2.0](index.png)
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
 
-```javascript
-const kittn = require('kittn');
+`Authorization: Process Flow`
 
-let api = kittn.authorize('meowmeowmeow');
-```
+## Access Privileges
 
-> Make sure to replace `meowmeowmeow` with your API key.
+Access privileges allows you to perform read or write operations in Smart Reference Data using REST APIs. You must assign the following privileges for a user to access data in Smart Reference Data:
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+| Privilege          | Short Desc        | Description                 |
+|--------------------|-------------------|-----------------------------|
+| API_ATTRIBUTES_R   | View Attributes   | Allows to view attributes   |
+| API_ATTRIBUTES_R/W | Create Attributes | Allows to create attributes |
+| API_GEOMETRICS_R   | View Geometrics   | Allows to view geometrics   |
+| API_GEOMETRICS_R/W | Create Geometrics | Allows to create geometrics |
+| API_TABLES_R       | View Tables       | Allows to view tables       |
+| API_TABLES_R/W     | Create Tables     | Allows to create tables     |
 
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
+## Request access token
 
-`Authorization: meowmeowmeow`
+You must have the following key value pairs in the request Body to access the token:
 
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
+| Key           | Value                         |
+|---------------|-------------------------------|
+| grant_type    | password                      |
+| username      | user created in SAM           |
+| password      | password for SAM user         |
+| client_id     | client Id from SAM            |
+| client_secret | client secret from SAM        |
+| scope         | Smart API Service Id from SAM |
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
 > The above command returns JSON structured like this:
 
 ```json
-{
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+	{
+
+  "access_token": "XXXXXXXX…",
+
+  "expires_in": 86400,
+
+  "token_type": "Bearer"
+
 }
 ```
+`POST https://samdev.ingrnet.com/sam/oauth/connect/token`
 
-This endpoint retrieves a specific kitten.
+# API Discoverability
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+The following section helps you to find the available projects, disciplines, and the National Language Support (NLS) in Smart Reference Data database server.
 
-### HTTP Request
+**Standard URI format**
 
-`GET http://example.com/kittens/<ID>`
+| Resource                  | Description                                            |
+|---------------------------|--------------------------------------------------------|
+| in-sprdapisrv.ingrnet.com | API Server where all the RESTFUL services are deployed |
+| SRD713                    | Virtual directory on the API Server                    |
+| Srd/V2                    | Route prefix                                           |
+| client_id                 | client Id from SAM                                     |
+| client_secret             | client secret from SAM                                 |
+| scope                     | Smart API Service Id from SAM                          |
 
-### URL Parameters
+## Configure Web API
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+### Application settings
 
-## Delete a Specific Kitten
+You must set the following configuration in the web.config file to consume from client service:
 
-```ruby
-require 'kittn'
+   * Open the web.config file, search for `Services baseUri`section, and set value for baseUri as:
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
+`baseUri ="https://<ServerName>/<VirtualDirectoryName>"/>`
 
-```python
-import kittn
+For example, if your server name is in-sprdapisrv.ingrnet.com, and the virtual directory name is SRD713, the `<baseUri>` must be:
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
+  `<services baseUri=" https://in-sprdapisrv.ingrnet.com/SRD713"/>`
 
-```shell
-curl "http://example.com/api/kittens/2"
-  -X DELETE
-  -H "Authorization: meowmeowmeow"
-```
+## Nullable Values
 
-```javascript
-const kittn = require('kittn');
+* For a nullable column, if no value is passed in the request body, the software replaces the column with the default value (if exists) else it is considered as NULL.
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
+* For a mandatory column if no value is passed in the request body, the software replaces the column with the default value (if exists) else an appropriate message is shown.
 
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
 
