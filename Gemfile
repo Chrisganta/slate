@@ -11,3 +11,4 @@ gem 'redcarpet', '~> 3.4.0'
 gem 'nokogiri', '~> 1.10.4'
 gem 'sass'
 gem "mini_racer"
+gem 'rake'

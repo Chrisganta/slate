@@ -62,6 +62,18 @@ A common OAuth allows a third-party client, such as PostMan web API, termed the 
 
 `Authorization: Process Flow`
 
+1. User’s API Client sends an access token request to the SAM server.
+2. SAM server authenticates and responds with an access token.
+3. User sends an API request along with the access token.
+4. API server validates the access token.
+5. API server sends the API request to the Smart Reference Data (SRD) Server.
+6. SRD sends the response to the API Server.
+7. API Server sends the response to the user's API client.
+
+
+
+
+
 ## Access Privileges
 
 Access privileges allows you to perform read or write operations in Smart Reference Data using REST APIs. You must assign the following privileges for a user to access data in Smart Reference Data:
@@ -104,7 +116,7 @@ You must have the following key value pairs in the request Body to access the to
 ### HTTP Request
 
 
-`POST https://samdev.ingrnet.com/sam/oauth/connect/token`
+`POST https://samdev.ingrnet.com/sam/oauth/connect/token <id> test`
 
 # API Discoverability
 
@@ -131,13 +143,18 @@ You must set the following configuration in the web.config file to consume from 
 
 `baseUri ="https://<ServerName>/<VirtualDirectoryName>"/>`
 
+`https://in-sprdapisrv.ingrnet.com/<Server Name>/<Virtual Directory>/V2/Projects('SDB')/Disciplines(5020)/Nls(1)Tables`
+
+
 For example, if your server name is in-sprdapisrv.ingrnet.com, and the virtual directory name is SRD713, the `<baseUri>` must be:
 
   `<services baseUri=" https://in-sprdapisrv.ingrnet.com/SRD713"/>`
 
 ## Nullable Values
 
-* For a nullable column, if no value is passed in the request body, the software replaces the column with the default value (if exists) else it is considered as NULL.
+* For a nullable column, if no value is passed in the request body, the software replaces the column with the default value 
+
+if exists) else it is considered as NULL.
 
 * For a mandatory column if no value is passed in the request body, the software replaces the column with the default value (if exists) else an appropriate message is shown.
 
@@ -148,7 +165,7 @@ For example, if your server name is in-sprdapisrv.ingrnet.com, and the virtual d
 ```json
 	 {
 
-  "@odata.context": "https://in-sprdapisrv.ingrnet.com/SmartRDAPI/Srd/V2/$metadata#Projects('SDB')/Disciplines(5020)/Nls(1)/Attributes",
+  "@odata.context": "https://in-sprdapisrv.ingrnet.com/SmartRDAPI/Srd/V2/$metadata#Projects('SDB')/Disciplines(5020)/Nls<SampleID> )/Attributes",
 
   "value": [
 
@@ -231,5 +248,89 @@ Example URI to retrieve all the attributes:
 | MetrEngl           | Reference to conversion table                                                                               | String  | Default value is S.40.04.01                                                                                                                                                     |
 | UnitId             |                                                                                                             | Integer |                                                                                                                                                                                 |
 | Unit               | Lookup unit                                                                                                 | String  |                                                                                                                                                                                 |
+
+#Manage Tables
+##Retrieve Tables
+### Sample URI request by table ID
+`GET https://in-sprdapisrv.ingrnet.com/<Server Name>/<Virtual Directory>/V2/Projects('SDB')/Disciplines(5020)/Nls(1)Tables(<TableId>)`
+
+> The command returns JSON structured like this:
+
+```json
+{
+
+  "@odata.context": "https://in-sprdapisrv.ingrnet.com/SRD713/Srd/V2/$metadata#Projects('SDB')/Disciplines(5020)/Nls(1)/Tables",
+
+  "value": [
+
+    {
+
+      "TableId": 6061,
+
+      "Project": "SDB",
+
+      "TableName": "M_A60_COUNT",
+
+      "TableTypeId": 5021,
+
+      "TableType": "PHYSICAL",
+
+    }
+
+  ]
+
+}
+```
+
+<aside class="notice">
+If no <TableId> is passed, the API retrieves all the available tables in the Smart Reference Data database server.
+</aside>
+
+Example URI to retrieve all the attributes:
+
+` https://in-sprdapisrv.ingrnet.com/<Server Name>/<Virtual Directory>/V2/Projects('SDB')/Disciplines(5020)/Nls(1)Tables `
+
+**Header**
+
+| Header name   | Description         | Required | Values                  |
+|---------------|---------------------|----------|-------------------------|
+| Authorization | Access token        | Required | Bearer < access_token > |
+| Content-Type  | Request type format | Required | application/json        |
+
+
+**Get URI Parameter**
+
+
+
+| Parameter | Description                                         | Type    | Required |
+|-----------|-----------------------------------------------------|---------|----------|
+| TableID   | The table id to which you want to retrieve the data | Integer | Required |
+
+**Response**
+
+
+| Element     | Description                                                       | Type    | Notes                     |
+|-------------|-------------------------------------------------------------------|---------|---------------------------|
+| TableId     | A unique ID for the table.                                        | Integer | Generated by the software |
+| Project     | The project or product group from where the table is retrieved.   | String  |                           |
+| TableName   | Name of the table                                                 | String  |                           |
+| TableTypeId | A unique ID for the table type.                                   | Integer | Generated by the software |
+| TableType   | Identifies the table type which the current table is assigned to. | String  |                           |
+
+
+##Add Table##
+
+**Header**
+
+| Header name   | Description         | Required | Values                  |
+|---------------|---------------------|----------|-------------------------|
+| Authorization | Access token        | Required | Bearer < access_token > |
+| Content-Type  | Request type format | Required | application/json        |
+
+**Post Body**
+
+
+
+
 
 
