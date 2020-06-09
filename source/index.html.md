@@ -21,7 +21,7 @@ search: true
 
 # Overivew
 
-The Ubuntu *Smart Reference Data REST API* provides you with a convenient, and simple web services interface for interacting with Smart Reference Data database server. The REST APIs are designed to easily access Smart Reference Data database and perform key tasks, that include, insert, update, and retrieve operation.
+The Ubuntu_Try2 *Smart Reference Data REST API* provides you with a convenient, and simple web services interface for interacting with Smart Reference Data database server. The REST APIs are designed to easily access Smart Reference Data database and perform key tasks, that include, insert, update, and retrieve operation.
 
 The Intergraph Smart® Reference Data REST API Help explains the basics of using the REST APIs to access Smart Reference Data database server.
 
